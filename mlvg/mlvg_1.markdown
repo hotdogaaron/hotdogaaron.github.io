@@ -7,7 +7,7 @@ title: Adventures in mlvg (Part 1)
 
 `mlvg` is a cross-platform audio app/plugin GUI framework created by Randy Jones of Madrona Labs. I've decided to document my somewhat bumpy experience (most of it my own fault) of getting the demo application up and running on my system. 
 
-**NOTE** This is not a tutorial. By the time you are reading this, it will be out of date, and `mlvg` will most likely be refactored and renamed. In fact, I'm not quite sure what the purpose of this is.
+**NOTE:**  This is not a tutorial. By the time you are reading this, it will be out of date, and `mlvg` will most likely be refactored and renamed. In fact, I'm not quite sure what the purpose of this is.
 
 Some stuff happened and I wanted to write about it. Enjoy!
 
@@ -213,7 +213,7 @@ Looking at our build directory in Finder, we find `testapp` in the `Debug` direc
 
 Very enlightening. I thought it possible I was missing some vital option(s) when running `xcodeubild` from the command line. Let's try running it from within the Xcode GUI instead.
 
-**UPDATE** I've since found that I should have been invoking `xcodebuild` like: `xcodebuild -project mlvg.xcodeproj -target [TARGET]`. After correcting some other issues (outlined below), this resulted in a working application that can be launched from Finder.
+**UPDATE:**  I've since found that I should have been invoking `xcodebuild` like: `xcodebuild -project mlvg.xcodeproj -target [TARGET]`. After correcting some other issues (outlined below), this resulted in a working application that can be launched from Finder.
 
 We'll select the `testapp` target and run it with the "Play" button:
 
@@ -266,8 +266,9 @@ Since there is no configured `LC_RPATH` entry, we have to rely on the default ru
 
 	sudo cp -r /Library/Frameworks/SDL2.framework Debug
 
-**Update** I've since found that this `rpath` can be added to the XCode configuration using the CMake property `XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS` within the `CMakeLists.txt` configuration for the target:  
-`set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "/Library/Frameworks")`
+**Update:**  I've since found that this `rpath` can be added to the XCode configuration using the CMake property `XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS` within the `CMakeLists.txt` configuration for the target:
+
+	set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "/Library/Frameworks")
 
 After running again, we get:
 
@@ -290,14 +291,12 @@ Well, you can see that getting a test `mlvg` application up and running can be a
 Off the top of my head, here are some things I want to look at:
 
 - README Additions
+	- Document XCode / Hardware version(s) last tested
 	- Add note about `madronalib` debug configuration
 	- Add note about Homebrew installation of SDL2
-	- Add instructions for building project
-		- GUI build vs `xcodebuild`
-		- Document XCode / Hardware version(s) last tested with
 	- Add note about Gatekeeper Exception for SDL2
+	- Add note about using `xcodebuild` and XCode GUI
 - Project Changes
-	- Look into proper options for command line build with `xcodebuild` (Update included above)
 	- Investigate adding `madronalib` as a git submodule
 	- Investigate statically linking SDL2
 	- Investigate adding RPATH for dynamic linking to SDL2 (Update included above)
