@@ -11,16 +11,6 @@ title: Adventures in mlvg (Part 1)
 
 Some stuff happened and I wanted to write about it. Enjoy!
 
-## On READMEs and new projects 
-
-Writing build instructions for projects is really hard. A author has probably compiled and tested the project hundreds or thousands of times before it's time to write up instructions in the README. At that point, there are probably dependencies long since forgotten, random fixes in the development environment, and a whole host of little problems that usually only crop up the very first time a user interacts with a project.
-
-For someone with a lot of technical experience, these problems can be a minor roadblock or an annoying timewaster. But for someone just getting started in  development, these sorts of things can be completely bewildering, and require hours of troubleshooting and learning that takes you well away from working on cool music stuff.
-
-The unfortunate truth is that this kind of stuff will always happen to some degree. You get better at dealing with it as time goes on and you accrue experience and technical literacy, but it never really goes away. Hopefully this helps shed some light on the process.
-
-Let's dive in!
-
 ## mlvg README Instructions
 
 	to build an app:
@@ -213,7 +203,11 @@ Looking at our build directory in Finder, we find `testapp` in the `Debug` direc
 
 Very enlightening. I thought it possible I was missing some vital option(s) when running `xcodeubild` from the command line. Let's try running it from within the Xcode GUI instead.
 
+---
+
 **UPDATE:**  I've since found that I should have been invoking `xcodebuild` like: `xcodebuild -project mlvg.xcodeproj -target [TARGET]`. After correcting some other issues (outlined below), this resulted in a working application that can be launched from Finder.
+
+---
 
 We'll select the `testapp` target and run it with the "Play" button:
 
@@ -266,9 +260,13 @@ Since there is no configured `LC_RPATH` entry, we have to rely on the default ru
 
 	sudo cp -r /Library/Frameworks/SDL2.framework Debug
 
+---
+
 **Update:**  I've since found that this `rpath` can be added to the XCode configuration using the CMake property `XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS` within the `CMakeLists.txt` configuration for the target:
 
 	set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "/Library/Frameworks")
+
+---
 
 After running again, we get:
 
@@ -301,4 +299,14 @@ Off the top of my head, here are some things I want to look at:
 	- Investigate statically linking SDL2
 	- Investigate adding RPATH for dynamic linking to SDL2 (Update included above)
 
-I'll may follow this up with another entry discussing and documenting these possible changes in more detail.
+I may follow this up with another entry discussing and documenting these possible changes in more detail.
+
+## On READMEs and new projects 
+
+Writing build instructions for projects is really hard, especially because readers like me don't always follow them as precisely as they should.
+
+An author has probably compiled and tested a project hundreds or thousands of times before it's time to write up instructions in the README. At that point, there are probably dependencies long since forgotten, random fixes in the development environment, and a whole host of little problems that usually only crop up the very first time a user interacts with a project.
+
+For someone with a lot of technical experience, these problems can be a minor roadblock or an annoying timewaster. But for someone just getting started in development, these sorts of things can be completely bewildering, and require hours of troubleshooting and learning that takes you well away from working on cool music stuff.
+
+The unfortunate truth is that this kind of stuff will always happen to some degree. You get better at dealing with it as time goes on and you accrue experience and technical literacy, but it never really goes away. Hopefully this helped shed some light on the process.
