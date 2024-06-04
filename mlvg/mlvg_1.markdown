@@ -1,19 +1,23 @@
 ---
 layout: default
 title: Adventures in mlvg (Part 1)
-description: Aaron Trythall's Website
 ---
+
 ## Introduction
 
-mlvg is a cross-platform audio app/plugin framework created by Randy Jones of Madrona Labs. While I can't speak for the project, it appears to me to be a minimal, and somewhat more nimble, alternative to larger frameworks like JUCE.
+`mlvg` is a cross-platform audio app/plugin GUI framework created by Randy Jones of Madrona Labs. I've decided to document my somewhat bumpy experience (most of it my own fault) of getting the demo application up and running on my system. 
 
-This is not a tutorial. I am documenting my warts-and-all experience of compiling and running the mlvg demo application on a MacOS environment, with the goal of identifying snags in the process and making improvments in the mlvg README and project settings.
+**NOTE** This is not a tutorial. By the time you are reading this, it will be out of date, and `mlvg` will most likely be refactored and renamed. In fact, I'm not quite sure what the purpose of this is.
 
-Writing instructions for open-source projects is really hard. As a developer, you've probably compiled and tested your app hundreds or thousands of times before it's time to write up instructions in the README. At that point, there are probably dependencies you've long since forgotten about, fixes you've made in your environment weeks ago, and a whole host of little problems that usually only crop up the very first time somone interacts with a project.
+Some stuff happened and I wanted to write about it. Enjoy!
 
-For someone with a lot of technical experience, these problems can be a minor roadblock or an annoying timewaster. But for someone just getting started in music development, these sorts of things can be completely bewildering, and require hours of troubleshooting and learning that takes you well away from working on cool music stuff.
+## On READMEs and new projects 
 
-The unfortunate truth is that you'll always run into stuff like this to some degree when working with source-code based projects that require compilation. Hopefully this helps shed some light on the process.
+Writing build instructions for projects is really hard. A author has probably compiled and tested the project hundreds or thousands of times before it's time to write up instructions in the README. At that point, there are probably dependencies long since forgotten, random fixes in the development environment, and a whole host of little problems that usually only crop up the very first time a user interacts with a project.
+
+For someone with a lot of technical experience, these problems can be a minor roadblock or an annoying timewaster. But for someone just getting started in  development, these sorts of things can be completely bewildering, and require hours of troubleshooting and learning that takes you well away from working on cool music stuff.
+
+The unfortunate truth is that this kind of stuff will always happen to some degree. You get better at dealing with it as time goes on and you accrue experience and technical literacy, but it never really goes away. Hopefully this helps shed some light on the process.
 
 Let's dive in!
 
@@ -43,7 +47,7 @@ Xcode: 15.2
 
 ## Installation and Setup
 
-I started by cloning the `mlvg` repository, and then cloned and updated the git submodules per the README. I did not notice the line from the README regarding `madronalib`, but luckily (?) I had previously compiled and installed the `madronalib` project while experimenting with the Soundplane software. Next, I installed SDL2 via Homebrew. Finally, I generated the project build folder using `CMake`.
+I started by cloning the `mlvg` repository, and then cloned and updated the git submodules per the README. I did not notice the line from the README regarding `madronalib`, but luckily (?) I had previously compiled and installed the `madronalib` project while experimenting with the Madrona Labs' Soundplane software. Next, I installed `SDL2` via Homebrew. Finally, I generated the project build folder using `CMake`.
 
 Input:
 
@@ -79,7 +83,7 @@ Cmake Output:
 
 ## Okay, now what?
 
-At this point we have generated an XCode project, but haven't actually built anything. At this point, a sane person may have double clicked on `build/mlvg.xcodeproj` and attempted to build in Xcode. I hate Xcode with a passion, and naively started trying to build on the command line with `xcodebuild`, and was immediately confronted with a gaggle of errors:
+At this point I have generated an XCode project, but haven't actually built anything. Now, a sane person may have double clicked on `build/mlvg.xcodeproj` and attempted to build in Xcode. I have some personal baggage with XCode from previous work experiences, and naively started trying to build on the command line with `xcodebuild` to avoid needing to use the GUI. Naturally, I was immediately confronted with a gaggle of errors:
 
 Input:
 
@@ -88,6 +92,7 @@ Input:
 
 Output [excerpt]
 
+	[...]
 	In file included from /Users/aaron/dev/music/mlvg/source/widgets/MLPanel.cpp:6:
 	In file included from /Users/aaron/dev/music/mlvg/source/widgets/MLPanel.h:8:
 	/Users/aaron/dev/music/mlvg/source/common/MLWidget.h:94:9: error: cannot initialize object parameter of type 'ml::PropertyTree' with an expression of type 'ml::Widget'
@@ -105,7 +110,7 @@ Output [excerpt]
 
 Okay, so what happened here? Taking a look at one of the random errors (`error: cannot initialize object parameter of type 'ml::PropertyTree' with an expression of type 'ml::Widget'`), it seems that an object is being constructed using incompatible input parameters. This sort of error often arises when an installed version of a dependancy does not match the version the project was coded against.
 
-Since the source of the error is the object type `ml::PropertyTree`, let's see where that is defined. First we'll search for PropertyTree in the mlvg codebase:
+Since the source of the error is the object type `ml::PropertyTree`, let's see where that is defined. First I searched for `PropertyTree` in the mlvg codebase:
 
 	$ grep ../source -rne PropertyTree
 
@@ -118,16 +123,14 @@ Since the source of the error is the object type `ml::PropertyTree`, let's see w
 	../source/common/MLWidget.h:37:  Widget(WithValues p) : PropertyTree(p) {}
 	../source/common/MLDrawContext.h:103:  PropertyTree* pProperties;
 
-Okay, so it looks like it isn't actually defined within `mlvg`, which makes sense. But we can see it appears to be defined in `MLPropertyTree.h`  Let's see if that is from `madronalib`:
+Okay, so it looks like it isn't actually defined within `mlvg`, which makes sense. But I can see it appears to be defined in `MLPropertyTree.h`  Let's see if that is from `madronalib`:
 
 	find ../../madronalib -name MLPropertyTree.h
 
 	# Output
 	../../madronalib/source/app/MLPropertyTree.h
 
-Jackpot! Remember when I said that I "luckily" had a previously compiled version of `madronalib`? Well, let's go ahead and update / rebuild that. 
-
-[Note: I didn't really search these projects using `grep / find` -- `madronalb`/`mlvg` are fairly small and easy to parse visually or by poking around. That said, in a much larger codebase, using search tools will almost certainly save you a significant amount of time.]
+Jackpot! Remember when I said that I "luckily" had a previously compiled version of `madronalib`? It turns out using a year-out-of-date version was a bad idea; let's go ahead and update / rebuild that. 
 
 	cd ../../madronalib
 	git pull
@@ -135,7 +138,7 @@ Jackpot! Remember when I said that I "luckily" had a previously compiled version
 	cmake ..
 	make
 	sudo make install
-	# make install is not included in the madronalib README instructions, should potentially be added
+	# make install is not included in the madronalib README instructions, this should potentially be added
 
 Okay, now that `madronalib` is updated, let's see what new horrors are in store.
 
@@ -177,14 +180,14 @@ It looks like since we're building in Debug configuration for the testapp, we're
 	make
 	sudo make install
 
-Now after rebuilding mlvg again, we see:
+Now after rebuilding `mlvg`, we see:
 
 	Ld /Users/aaron/dev/music/mlvg/build/build/testapp.build/Debug/Objects-normal/x86_64/Binary/testapp normal x86_64 (in target 'testapp' from project 'mlvg')
 	[...]
 	ld: framework 'SDL2' not found
 	clang: error: linker command failed with exit code 1 (use -v to see invocation)
 
-So we're having trouble linking with SDL2. My first thought was -- well maybe I was being too fancy by installing with Homebrew -- let's SDL2 install per the README instructions in /Library/Frameworks/. So I went to libsdl.org, downloaded the MacOS release ( `SDL2-2.30.0.dmg` ), and extracted SDL2.framework to `/Library/Frameworks/SDL2.framework`. Next, we'll regenerate the build folder so `cmake` can pick up the new paths.
+So we're having trouble linking with SDL2. My first thought was -- well maybe I was being too fancy by installing with Homebrew -- let's install SDL2 in `/Library/Frameworks/` per the `README` instructions. So I went to libsdl.org, downloaded the MacOS release ( `SDL2-2.30.0.dmg` ), and extracted `SDL2.framework` to `/Library/Frameworks/SDL2.framework`. Next, we'll regenerate the build folder so `cmake` can pick up the new paths.
 
 	cd ..
 	rm -rf build && mkdir build && cd build
@@ -208,19 +211,23 @@ Looking at our build directory in Finder, we find `testapp` in the `Debug` direc
 
 	[Process completed]
 
-Very enlightening. Let's try running it from within Xcode. We'll select the `testapp` target and run it with the "Play" button.
+Very enlightening. I thought it possible I was missing some vital option(s) when running `xcodeubild` from the command line. Let's try running it from within the Xcode GUI instead.
 
-[Screenshot 1]
+**UPDATE** I've since found that I should have been invoking `xcodebuild` like: `xcodebuild -project mlvg.xcodeproj -target [TARGET]`. After correcting some other issues (outlined below), this resulted in a working application that can be launched from Finder.
+
+We'll select the `testapp` target and run it with the "Play" button:
+
+![Screenshot 1](images/mlvg_1-1.png)
 
 And the result is ... Build failed. Let's rebuild the whole project from within XCode. We'll select the `ALL_BUILD` target and use the "Play" button again.
 
-[Screenshot 2]
+![Screenshot 2](images/mlvg_1-2.png)
 
 Success! Now we can switch back the the `testapp` target and try again. We have another failure, but with more useable information than from the command line:
 
-[Screenshot 3]
+![Screenshot 3](images/mlvg_1-3.png)
 
-Looking at the XCode console, we can see that the SDL2 Framework is not being found. We didn't have a problem at compilation, so this appears to be a runtime path problem.
+Looking at the XCode console, we can see that the `SDL2` Framework is not being found. We didn't have a problem at compilation, so this appears to be a runtime path problem.
 
 First, I checked `testapp` using `otool -L` to see its library dependencies:
 
@@ -243,7 +250,9 @@ First, I checked `testapp` using `otool -L` to see its library dependencies:
 		/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 2202.0.0)
 		/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)
 
-The entry `@rpath/SDL2.framework/Versions/A/SDL2 (compatibility version 3001.0.0, current version 3001.0.0)` indicates that this framework is expected to be found using a runtime path (rpath), rather than a fixed location on disk. There are typically some default paths that are searched at runtime, s well as any search paths that are embedded within the binary itself, which are set at build time. Let's check the binary with `otool -l` (note the lowercase) to see if there are any rpaths baked in:
+The entry `@rpath/SDL2.framework/Versions/A/SDL2 (compatibility version 3001.0.0, current version 3001.0.0)` indicates that this framework is expected to be found using a runtime path (rpath), rather than a fixed location on disk. There are typically some default paths that are searched at runtime, as well as any search paths that are embedded within the binary itself, which are set at build time.
+
+Let's check the binary with `otool -l` (note the lowercase) to see if there are any rpaths baked in:
 
 	otool -l Debug/testapp
 
@@ -253,9 +262,12 @@ This command yields a lot of output, but what we are looking for is an entry lab
 	# Output
 	# nada
 
-Since there is no configured RPATH entry, we have to rely on the default runtime search paths. One would assume that `/Library/Frameworks` would be included in the default search paths, but that is apparently not the case. Next, we'll try dropping it next to the binary -- that's usually a safe place to expect an rpath to resolve.
+Since there is no configured `LC_RPATH` entry, we have to rely on the default runtime search paths. One would assume that `/Library/Frameworks` would be included in the default search paths, but that is apparently not the case. Next, we'll try dropping it next to the binary -- that's usually a safe place to expect an rpath to resolve.
 
 	sudo cp -r /Library/Frameworks/SDL2.framework Debug
+
+**Update** I've since found that this `rpath` can be added to the XCode configuration using the CMake property `XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS` within the `CMakeLists.txt` configuration for the target:  
+`set_target_properties(${target} PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "/Library/Frameworks")`
 
 After running again, we get:
 
@@ -265,11 +277,11 @@ After running again, we get:
 
 It looks like our old friend GateKeeper. We can go into System Settings -> Privacy and Security to enable this.
 
-[Screenshot 4]
+![Screenshot 4](images/mlvg_1-4.png)
 
 Finally, we'll run `testapp` from Xcode again, and finally have a running test application:
 
-[Screenshot 5]
+![Screenshot 5](images/mlvg_1-5.png)
 
 ## What's Next
 
@@ -285,9 +297,9 @@ Off the top of my head, here are some things I want to look at:
 		- Document XCode / Hardware version(s) last tested with
 	- Add note about Gatekeeper Exception for SDL2
 - Project Changes
-	- Look into proper options for command line build with `xcodebuild`
+	- Look into proper options for command line build with `xcodebuild` (Update included above)
 	- Investigate adding `madronalib` as a git submodule
 	- Investigate statically linking SDL2
-	- Investigate adding RPATH for dynamic linking to SDL2
+	- Investigate adding RPATH for dynamic linking to SDL2 (Update included above)
 
-I'll probably follow this up with another entry discussing and documenting these possible changes in more detail.
+I'll may follow this up with another entry discussing and documenting these possible changes in more detail.
