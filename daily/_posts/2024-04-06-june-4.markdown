@@ -1,0 +1,11 @@
+---
+layout: post
+---
+
+Decently productive day.
+
+- Revised and posted "Adventures in MLVG (part 1)"
+- Configured GitHub Pages to use hotdogaaron.com
+- Mucked around with `doxygen` and `clang-format`
+- Figured out how to reference posts by category, put daily log on the front page.
+- Started the DSP Theory chapter of the Pirkle book.
