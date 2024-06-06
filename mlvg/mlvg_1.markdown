@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Adventures in mlvg (Part 1)
 ---
 
