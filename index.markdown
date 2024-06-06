@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: page
 title: Hot Dog Aaron
 description: A website in three easy pieces.
+date: "%b %-d, %Y" 
 ---
 Hi, I'm Aaron Trythall, a human on the internet.
 
@@ -13,10 +14,10 @@ Hi, I'm Aaron Trythall, a human on the internet.
 
 ---
 
-## Daily(ish) Log
+## [Daily(ish) Log](./daily)
 
-### {{site.categories.daily.first.title}}
-
+#### {{site.categories.daily.first.title}}
+{{site.categories.daily.first.date | date: "%b %-d, %Y"}}
 {{site.categories.daily.first.content}}
 
 ---
