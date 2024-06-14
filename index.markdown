@@ -24,4 +24,5 @@ Hi, I'm Aaron Trythall, a human on the internet.
 
 ## Recent Writings
 
-[Adventures In mlvg](./mlvg/mlvg_1)  
+[Adventures In mlvg](./dsp/mlvg_1)  
+[Adventures In madronalib](./dsp/madronalib_1)  
