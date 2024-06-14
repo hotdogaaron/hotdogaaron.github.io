@@ -1,0 +1,19 @@
+---
+layout: post
+---
+
+I just finished up a first draft of [Adventures in madronalib](/dsp/madronalib_1). It is still in need of proofreading, but it's nice to get that off the press.
+
+Next up will be trying to start putting together some DSP code of my own.
+
+---
+
+I got Musimathics vol. 2 last weekend and started working through the first chapter a few days ago. This seems like it will be a good resource to learn DSP math -- I think I'll try to work through it and use it as a basis to branch out into more in-depth mathematics.
+
+---
+
+I've been thinking about working on having some other projects to put my energy towards as well. I find that I fixate on a new learning project to the exclusion of all else, but then burn out after a few weeks and let it fall by the wayside.
+
+I'd like to cultivate the habit of maintaining a few long-running projects that occupy different headspaces, so when my motivation wanes in one area I have somewhere to turn my energies to without needing to start something from zero.
+
+I would also like to get into the habit of working through blocking/setup tasks when I have limited energy. The times that I'm feeling like working on a specific idea are often undercut by the setup costs around starting.
