@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'plex-mono';
+    src: url('../fonts/ibmplexmono-regular-webfont.woff2') format('woff2'),
+         url('../fonts/ibmplexmono-regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pt-mono';
+    src: url('../fonts/ptm55ft-webfont.woff2') format('woff2'),
+         url('../fonts/ptm55ft-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html {
+    font-family: pt-mono;
+}
+
+.max-width-wrapper {
+    max-width: 800px;
+    padding: 0 1rem 4rem 4rem;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    line-height: 1;
+    margin-bottom: .75em;
+    margin-top: 1.5em;
+}
+
+p {
+    line-height: 1.6;
+    margin: 0.75rem 0;
+}
+
+pre {
+    background-color: hsl(0 0 95);
+    margin: 1.5rem 0;
+    padding: 0.5rem 1rem;
+    overflow: scroll;
+}
+
+img {
+    margin: 1.5rem 0;
+}
+
+hr {
+    width: 25%;
+    line-height: 1;
+    height: 1px;
+    margin: 1.5rem auto;
+    color: hsl(0 0 40);
+}

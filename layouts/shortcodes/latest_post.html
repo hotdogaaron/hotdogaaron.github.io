@@ -1,0 +1,5 @@
+  {{ with (index (where site.RegularPages "Type" "daily").ByDate.Reverse 0) }}
+    <h2>{{ .Title }}</h2>
+    {{ .Content }}
+    <a href="/daily">more</a>
+  {{ end }}

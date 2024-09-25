@@ -1,0 +1,11 @@
+baseURL = 'https://hotdogaaron.com/'
+languageCode = 'en-us'
+title = 'Hot Dog Aaron'
+disableKinds = ['taxonomy', 'term']
+pluralizeListTitles = false
+
+[params]
+  [params.theme_config]
+    appearance = "auto"
+    back_home_text = "back"
+    date_format = "2006-01-02"
